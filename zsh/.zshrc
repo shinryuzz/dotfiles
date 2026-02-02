@@ -151,7 +151,6 @@ alias lz="lazygit"
 
 alias dc="docker compose"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -168,3 +167,24 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+# fzf + history
+function fzf-select-history() {
+  BUFFER=$(history -n -r 1 | fzf --height 75% --no-sort +m --query "$LBUFFER" --prompt="History >")
+  CURSOR=$#BUFFER
+  zle clear-screen
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
+
+
+# fzf + ghq
+function ghq-fzf() {
+  local src=$(ghq list | fzf --height 75% --preview "ls -laTp $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
+  fi
+  zle -R -c
+}
+zle -N ghq-fzf
+bindkey '^]' ghq-fzf
