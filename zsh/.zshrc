@@ -3,7 +3,9 @@ typeset -gU PATH path
 
 path=(
   '/opt/homebrew/bin'(N-/)
+  '/opt/homebrew/sbin'(N-/)
   '/usr/local/bin'(N-/)
+  '/usr/local/sbin'(N-/)
   '/bin'(N-/)
   '/usr/bin'(N-/)
 )
@@ -103,6 +105,7 @@ plugins=(
   autojump
 )
 
+
 # autojamp
 [[ -s /Users/shinryuzz/.autojump/etc/profile.d/autojump.sh ]] && source /Users/shinryuzz/.autojump/etc/profile.d/autojump.sh
 autoload -U compinit && compinit -u
@@ -133,36 +136,51 @@ SAVEHIST=1000000
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
+### Aliases ###
 
+source /opt/homebrew/share/zsh-abbr/zsh-abbr.zsh
 # Interactive option for safe execution
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
-
-alias vim="nvim"
-alias tf="terraform"
 alias gcc="gcc-14"
+alias brew="arch -arm64 brew"
 
-alias cc="gcc-14"
+abbr -S --quieter tf="terraform"
+abbr -S --quieter lz="lazygit"
+abbr -S --quieter dc="docker compose"
 
-alias lz="lazygit"
+### Functions ###
 
-alias dc="docker compose"
+# fzf + history
+function fzf-select-history() {
+  BUFFER=$(history -n -r 1 | fzf --height 75% --no-sort +m --query "$LBUFFER" --prompt="History >")
+  CURSOR=$#BUFFER
+  zle clear-screen
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/shinryuzz/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
-else
-  if [ -f "/Users/shinryuzz/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-    . "/Users/shinryuzz/opt/anaconda3/etc/profile.d/conda.sh"
-  else
-    export PATH="/Users/shinryuzz/opt/anaconda3/bin:$PATH"
+# fzf + ghq
+function ghq-fzf() {
+  local src=$(ghq list | fzf --height 75% --preview "ls -laTp $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
   fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+  zle -R -c
+}
+zle -N ghq-fzf
+bindkey '^]' ghq-fzf
 
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/shinryuzz/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/shinryuzz/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/shinryuzz/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/shinryuzz/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+  export PATH="$HOME/.local/bin:$PATH"
+
+
+### mise ###
+eval "$(mise activate zsh)"
