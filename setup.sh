@@ -13,7 +13,8 @@ set -eu
 # #########################################################
 # Constants
 # #########################################################
-readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+readonly SCRIPT_DIR
 readonly CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 readonly GREEN='\033[0;32m'
