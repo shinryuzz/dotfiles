@@ -1,38 +1,116 @@
 #!/bin/bash
-
-# create symbolic links to the config files
+#
+# dotfiles setup script
+# Usage: ./setup.sh [OPTIONS]
+#
+# Options:
+#   -f, --force    Overwrite existing symlinks
+#   -h, --help     Show this help message
+#
 
 set -eu
 
-CUR_DIR=$(
-	cd $(dirname $0) || exit 1
-	pwd
-)
-cd $CUR_DIR
+# #########################################################
+# Constants
+# #########################################################
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+readonly SCRIPT_DIR
+readonly CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
-CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[0;33m'
+readonly RED='\033[0;31m'
+readonly NC='\033[0m' # No Color
 
-declare -a DIRS=(
-	"zsh"
-	"alacritty"
-	"nvim"
-	"tmux"
-)
+# #########################################################
+# Utility Functions
+# #########################################################
+info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
 
-for dir in "${DIRS[@]}"; do
-	dst_dir=$CONFIG_HOME/$dir
-	if [ -e $dst_dir ]; then
-		echo "$dst_dir already exists, skipping..."
-	else
-		ln -sf $CUR_DIR/$dir $dst_dir
-	fi
+warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[ERROR]${NC} $1" >&2
+}
+
+usage() {
+    head -n 10 "$0" | tail -n 8 | sed 's/^# //' | sed 's/^#//'
+    exit 0
+}
+
+# #########################################################
+# Parse Arguments
+# #########################################################
+FORCE=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -f|--force)
+            FORCE=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            error "Unknown option: $1"
+            usage
+            ;;
+    esac
 done
 
-HS_PATH=${CUR_DIR}/hammerspoon
-if [ -e $HS_PATH ]; then
-	echo "$HS_PATH already exists, skipping..."
-else
-	ln -sf $CUR_DIR/hammerspoon ~/.hammerspoon
-fi
+# #########################################################
+# Symlink Functions
+# #########################################################
+create_symlink() {
+    local src="$1"
+    local dst="$2"
 
-echo "### Setup completed! ###"
+    if [[ -L "$dst" ]]; then
+        if [[ "$FORCE" == true ]]; then
+            rm "$dst"
+            ln -s "$src" "$dst"
+            info "Replaced symlink: $dst -> $src"
+        else
+            warn "$dst already exists (symlink), skipping... (use -f to overwrite)"
+        fi
+    elif [[ -e "$dst" ]]; then
+        warn "$dst already exists (file/directory), skipping..."
+    else
+        mkdir -p "$(dirname "$dst")"
+        ln -s "$src" "$dst"
+        info "Created symlink: $dst -> $src"
+    fi
+}
+
+# #########################################################
+# Main Setup
+# #########################################################
+main() {
+    info "Starting dotfiles setup..."
+    info "Script directory: $SCRIPT_DIR"
+    info "Config home: $CONFIG_HOME"
+
+    # XDG config directories
+    local -a xdg_dirs=(
+        "zsh"
+        "alacritty"
+        "nvim"
+        "tmux"
+    )
+
+    for dir in "${xdg_dirs[@]}"; do
+        create_symlink "$SCRIPT_DIR/$dir" "$CONFIG_HOME/$dir"
+    done
+
+    # Hammerspoon (uses ~/.hammerspoon)
+    create_symlink "$SCRIPT_DIR/hammerspoon" "$HOME/.hammerspoon"
+
+    info "Setup completed!"
+}
+
+main "$@"

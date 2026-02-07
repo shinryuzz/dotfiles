@@ -16,7 +16,6 @@ path=(
   "$HOME/.local/bin"(N-/)
   "$CARGO_HOME/bin"(N-/)
   "$GOPATH/bin"(N-/)
-  "$VOLTA_HOME/bin"(N-/)
   "$path[@]"
 )
 
@@ -39,7 +38,7 @@ plugins=(
   autojump
 )
 
-[[ -s /Users/shinryuzz/.autojump/etc/profile.d/autojump.sh ]] && source /Users/shinryuzz/.autojump/etc/profile.d/autojump.sh
+[[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] && source "$HOME/.autojump/etc/profile.d/autojump.sh"
 autoload -U compinit && compinit -u
 
 source $ZSH/oh-my-zsh.sh
@@ -96,11 +95,12 @@ bindkey '^]' ghq-fzf
 # #########################################################
 
 # Google Cloud SDK
-if [ -f '/Users/shinryuzz/Downloads/google-cloud-sdk/path.zsh.inc' ]; then
-  source '/Users/shinryuzz/Downloads/google-cloud-sdk/path.zsh.inc'
+GCLOUD_SDK_PATH="${GCLOUD_SDK_PATH:-$HOME/google-cloud-sdk}"
+if [[ -f "$GCLOUD_SDK_PATH/path.zsh.inc" ]]; then
+  source "$GCLOUD_SDK_PATH/path.zsh.inc"
 fi
-if [ -f '/Users/shinryuzz/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then
-  source '/Users/shinryuzz/Downloads/google-cloud-sdk/completion.zsh.inc'
+if [[ -f "$GCLOUD_SDK_PATH/completion.zsh.inc" ]]; then
+  source "$GCLOUD_SDK_PATH/completion.zsh.inc"
 fi
 
 # mise

@@ -1,6 +1,7 @@
 # ignore all
 /*
 /.**
+.DS_Store
 .zcompdump**
 
 
@@ -17,5 +18,6 @@
 
 !setup.sh
 !Makefile
+!scripts/
 
 
