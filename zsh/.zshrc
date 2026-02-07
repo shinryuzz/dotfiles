@@ -65,7 +65,6 @@ alias brew="arch -arm64 brew"
 abbr -S --quieter tf="terraform"
 abbr -S --quieter lz="lazygit"
 abbr -S --quieter dc="docker compose"
-abbr -S --quieter cc="claude"
 
 # #########################################################
 # Functions
