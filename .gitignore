@@ -3,6 +3,7 @@
 /.**
 .DS_Store
 .zcompdump**
+.zsh_history
 
 
 # white list
@@ -19,5 +20,7 @@
 !setup.sh
 !Makefile
 !scripts/
+
+work.*
 
 
