@@ -125,7 +125,3 @@ make update        # プラグイン等を更新
 | `XDG_DATA_HOME`   | `~/.local/share` | データファイル |
 | `XDG_STATE_HOME`  | `~/.local/state` | 状態ファイル   |
 | `XDG_CACHE_HOME`  | `~/.cache`       | キャッシュ     |
-
-## ライセンス
-
-MIT
