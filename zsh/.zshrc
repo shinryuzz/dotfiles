@@ -46,7 +46,6 @@ source $ZSH/oh-my-zsh.sh
 # #########################################################
 # History
 # #########################################################
-HISTFILE="$XDG_STATE_HOME/zsh_history"
 HISTSIZE=1000000
 SAVEHIST=1000000
 
@@ -105,3 +104,11 @@ fi
 
 # mise
 eval "$(mise activate zsh)"
+
+# #########################################################
+# Work-specific settings
+# #########################################################
+work_zsh="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/work.zsh"
+if [[ -r "$work_zsh" ]]; then
+  source "$work_zsh"
+fi

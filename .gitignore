@@ -4,7 +4,6 @@
 .DS_Store
 .zcompdump**
 
-
 # white list
 !README.md
 !.gitignore
@@ -19,5 +18,7 @@
 !setup.sh
 !Makefile
 !scripts/
+
+work.*
 
 
