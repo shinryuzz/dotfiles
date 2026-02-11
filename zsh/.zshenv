@@ -17,7 +17,6 @@ export XDG_RUNTIME_DIR="/run/user/$UID"
 # Zsh
 # #########################################################
 export ZSH="$XDG_DATA_HOME"/oh-my-zsh
-export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
 # History file location (XDG compliant)
 export HISTFILE="$XDG_STATE_HOME/zsh_history"
@@ -33,3 +32,26 @@ export GOPATH="$XDG_DATA_HOME/go"
 export RUST_BACKTRACE=1
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
+
+# #########################################################
+# Path
+# #########################################################
+typeset -gU PATH path
+
+path=(
+  '/opt/homebrew/bin'(N-/)
+  '/opt/homebrew/sbin'(N-/)
+  '/usr/local/bin'(N-/)
+  '/usr/local/sbin'(N-/)
+  '/bin'(N-/)
+  '/usr/bin'(N-/)
+  '/sbin'(N-/)
+  '/usr/sbin'(N-/)
+)
+
+path=(
+  "$HOME/.local/bin"(N-/)
+  "$CARGO_HOME/bin"(N-/)
+  "$GOPATH/bin"(N-/)
+  "$path[@]"
+)

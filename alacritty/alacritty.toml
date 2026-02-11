@@ -19,16 +19,18 @@ COLORTERM = "truecolor"
 decorations = "buttonless"
 dynamic_padding = false
 opacity = 0.80
+# dimensions.columns = 220
+# dimensions.lines = 75
 
 [window.padding]
-x = 10
-y = 8
+x = 8
+y = 5
 
 # #########################################################
 # Font
 # #########################################################
 [font]
-size = 13.0
+size = 14.0
 
 [font.normal]
 family = "Hack Nerd Font"
@@ -80,4 +82,4 @@ mods = "Control"
 # #########################################################
 [terminal.shell]
 program = "/bin/zsh"
-args = ["-l", "-c", "/opt/homebrew/bin/tmux new-session -A -s home"]
+args = ["-c", "/opt/homebrew/bin/tmux a -t home || /opt/homebrew/bin/tmux"]
