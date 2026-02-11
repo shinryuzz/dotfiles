@@ -1,25 +1,4 @@
 # #########################################################
-# Path
-# #########################################################
-typeset -gU PATH path
-
-path=(
-  '/opt/homebrew/bin'(N-/)
-  '/opt/homebrew/sbin'(N-/)
-  '/usr/local/bin'(N-/)
-  '/usr/local/sbin'(N-/)
-  '/bin'(N-/)
-  '/usr/bin'(N-/)
-)
-
-path=(
-  "$HOME/.local/bin"(N-/)
-  "$CARGO_HOME/bin"(N-/)
-  "$GOPATH/bin"(N-/)
-  "$path[@]"
-)
-
-# #########################################################
 # Powerlevel10k
 # #########################################################
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
