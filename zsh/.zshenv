@@ -17,6 +17,7 @@ export XDG_RUNTIME_DIR="/run/user/$UID"
 # Zsh
 # #########################################################
 export ZSH="$XDG_DATA_HOME"/oh-my-zsh
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
 # History file location (XDG compliant)
 export HISTFILE="$XDG_STATE_HOME/zsh_history"
